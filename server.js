@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const logger = require('./utils/logger');
 
 require('dotenv').config();
 
@@ -14,4 +15,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/payment', paymentRoute);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`)
+});
