@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #qr-result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            word-break: break-all;
+            min-height: 60px;
+        }
+
+        #qr-result-text {
+            margin: 0;
+        }
+
+        #scan-history {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        #history-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #history-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        #history-list li:last-child {
+            border-bottom: none;
+        }
+
+        .timestamp {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 8px;
+        }
+
+        #control-section {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #camera-selection {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .status {
+            margin-top: 10px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            #reader {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Scanner</h1>
+        
+        <select id="camera-selection">
+            <option value="">Select Camera</option>
+        </select>
+        
+        <div id="reader"></div>
+        
+        <div id="control-section">
+            <button id="start-button">Start Scanning</button>
+            <button id="stop-button" disabled>Stop Scanning</button>
+            <button id="clear-history">Clear History</button>
+        </div>
+        
+        <p class="status" id="status">Scanner inactive</p>
+        
+        <div id="qr-result">
+            <p id="qr-result-text">Scan a QR code to see the result here</p>
+        </div>
+        
+        <div id="scan-history">
+            <h3>Scan History</h3>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+        const clearHistoryButton = document.getElementById('clear-history');
+        const statusElement = document.getElementById('status');
+        const resultElement = document.getElementById('qr-result-text');
+        const historyList = document.getElementById('history-list');
+        const cameraSelection = document.getElementById('camera-selection');
+        
+        let html5QrCode = null;
+        let scanning = false;
+        let scanHistory = [];
+        
+        // Initialize the QR code scanner
+        function initScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            loadCameras();
+        }
+        
+        // Load available cameras
+        async function loadCameras() {
+            try {
+                const devices = await Html5Qrcode.getCameras();
+                
+                if (devices && devices.length) {
+                    // Clear the select element
+                    cameraSelection.innerHTML = '<option value="">Select Camera</option>';
+                    
+                    // Add cameras to the select element
+                    devices.forEach(device => {
+                        const option = document.createElement('option');
+                        option.value = device.id;
+                        option.text = device.label || `Camera ${cameraSelection.length}`;
+                        cameraSelection.add(option);
+                    });
+                    
+                    statusElement.textContent = 'Select a camera and press Start Scanning';
+                } else {
+                    statusElement.textContent = 'No cameras found';
+                }
+            } catch (err) {
+                console.error('Error getting cameras', err);
+                statusElement.textContent = `Error: ${err.message}`;
+            }
+        }
+        
+        // Start QR code scanning
+        function startScanning() {
+            const cameraId = cameraSelection.value;
+            
+            if (!cameraId) {
+                alert('Please select a camera first');
+                return;
+            }
+            
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+            
+            html5QrCode.start(
+                cameraId,
+                config,
+                onScanSuccess,
+                onScanFailure
+            )
+            .then(() => {
+                scanning = true;
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                statusElement.textContent = 'Scanning active';
+            })
+            .catch(err => {
+                console.error('Error starting scanner', err);
+                statusElement.textContent = `Error: ${err.message}`;
+            });
+        }
+        
+        // Stop scanning
+        function stopScanning() {
+            if (html5QrCode && scanning) {
+                html5QrCode.stop()
+                .then(() => {
+                    scanning = false;
+                    startButton.disabled = false;
+                    stopButton.disabled = true;
+                    statusElement.textContent = 'Scanner inactive';
+                })
+                .catch(err => {
+                    console.error('Error stopping scanner', err);
+                });
+            }
+        }
+        
+        // Handle successful scan
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`QR Code detected: ${decodedText}`);
+            
+            // Create timestamp
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString();
+            
+            // Format the result
+            if (decodedText.match(/^https?:\/\//i)) {
+                resultElement.innerHTML = `Found URL: <a href="${decodedText}" target="_blank">${decodedText}</a>`;
+            } else {
+                resultElement.innerHTML = `QR Content: ${decodedText}`;
+            }
+            
+            // Add to history
+            addToHistory(decodedText, timestamp);
+            
+            // Optional: Uncomment to stop scanning after finding a code
+            // stopScanning();
+        }
+        
+        // Handle scan failure
+        function onScanFailure(error) {
+            // This function will be called frequently, so we don't want to log anything
+            // or update the UI on every failure
+        }
+        
+        // Add scan result to history
+        function addToHistory(text, timestamp) {
+            // Add to local array
+            scanHistory.unshift({ text, timestamp });
+            
+            // Limit history size
+            if (scanHistory.length > 20) {
+                scanHistory.pop();
+            }
+            
+            // Update UI
+            updateHistoryList();
+        }
+        
+        // Update history list in the UI
+        function updateHistoryList() {
+            historyList.innerHTML = '';
+            
+            if (scanHistory.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'No scan history';
+                historyList.appendChild(li);
+                return;
+            }
+            
+            scanHistory.forEach(item => {
+                const li = document.createElement('li');
+                
+                if (item.text.match(/^https?:\/\//i)) {
+                    li.innerHTML = `<a href="${item.text}" target="_blank">${item.text}</a><span class="timestamp">${item.timestamp}</span>`;
+                } else {
+                    li.innerHTML = `${item.text}<span class="timestamp">${item.timestamp}</span>`;
+                }
+                
+                historyList.appendChild(li);
+            });
+        }
+        
+        // Clear scan history
+        function clearHistory() {
+            scanHistory = [];
+            updateHistoryList();
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', initScanner);
+        startButton.addEventListener('click', startScanning);
+        stopButton.addEventListener('click', stopScanning);
+        clearHistoryButton.addEventListener('click', clearHistory);
+        
+        // Initialize history list
+        updateHistoryList();
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    #reader {
+      width: 300px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>QR Code Scanner</h2>
+  <div id="reader"></div>
+  <p>Scanned Result: <span id="result"></span></p>
+
+  <script>
+    const resultElement = document.getElementById('result');
+
+    function onScanSuccess(decodedText, decodedResult) {
+      // Show the scanned result
+      resultElement.innerText = decodedText;
+
+      // Stop scanning once a QR code is found
+      html5QrcodeScanner.clear().then(_ => {
+        console.log("Scanner stopped.");
+      }).catch(error => {
+        console.error("Failed to stop scanner.", error);
+      });
+    }
+
+    const html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 });
+
+    html5QrcodeScanner.render(onScanSuccess);
+  </script>
+</body>
+</html>
