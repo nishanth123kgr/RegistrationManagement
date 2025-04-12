@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechBlitz - 2025 Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap">
+</head>
+
+<body>
+    <div class="page-container">
+        <div class="container">
+            <form id="registrationForm">
+                <div class="form-header">
+                    <div class="logo-container">
+
+                        <img class="phoenix-logo" src="img/logo.png" alt="" width="200px">
+
+                    </div>
+                    <h1>TechBlitz <span>2025</span></h1>
+                    <p class="email-notice">Fast Forwarding The Future</p>
+                </div>
+
+                <!-- Progress indicator -->
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                    <div class="section-indicator" id="sectionIndicator">Section 1 of 6</div>
+                </div>
+
+                <!-- Section 1: Introduction -->
+                <section class="form-section active" id="section1">
+                    <div class="info-box">
+                        <div class="section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                                    fill="currentColor" />
+                            </svg>
+                        </div>
+                        <h2>Event Information</h2>
+                        <div class="contact-info">
+                            <span class="label">For Any Queries:</span>
+                            <div class="phone-numbers">
+                                <a href="tel:+919791334755">+91 9791334755</a> or <a href="tel:+916382575585">+91
+                                    6382575585</a>
+                            </div>
+                        </div>
+
+                        <div class="rules-container">
+                            <h3>Important Guidelines</h3>
+                            <ul class="event-rules">
+                                <li>
+                                    <span class="rule-icon">📌</span>
+                                    <span class="rule-text">Participants are mandated to register in the <a href="https://forms.gle/UoJx7P9tLEevfyxQ8" > User Creation Form</a> before proceeding in this form.</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">🎯</span>
+                                    <span class="rule-text">Participants can only attend two events, either two
+                                        technical or one technical and one non-technical event.</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">🍽️</span>
+                                    <span class="rule-text">Lunch will be provided.</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">🪪</span>
+                                    <span class="rule-text">Your college ID card is required (For verification
+                                        purpose).</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">📝</span>
+                                    <span class="rule-text">Paper Presentation can have maximum of three members per
+                                        team and the abstract should be submitted during the registration.</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">🔬</span>
+                                    <span class="rule-text">Project Expo can have maximum of two members per team. The
+                                        demo should be submitted on 13-04-2025 at <a
+                                            href="mailto:techblitzaurct2025@gmail.com">techblitzaurct2025@gmail.com</a>.</span>
+                                </li>
+                                <li>
+                                    <span class="rule-icon">🎨</span>
+                                    <span class="rule-text">Meme creation, Video editing and Photography are submission
+                                        events. The last date for submission is 13-04-2025 at <a
+                                            href="mailto:techblitzaurct2025@gmail.com">techblitzaurct2025@gmail.com</a>.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="button-container">
+                            <button type="button" class="next-btn" onclick="nextSection(1)">
+                                Continue to Basic Information
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                    <path fill="none" d="M0 0h24v24H0z" />
+                                    <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                        fill="currentColor" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: Basic Information -->
+                <section class="form-section" id="section2">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M4 22a8 8 0 1 1 16 0h-2a6 6 0 1 0-12 0H4zm8-9c-3.315 0-6-2.685-6-6s2.685-6 6-6 6 2.685 6 6-2.685 6-6 6zm0-2c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Basic Information</h2>
+
+                    <div class="form-group floating-label">
+                        <input type="email" id="email" name="email" required placeholder=" ">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                    </div>
+
+                    <a href="https://forms.gle/UoJx7P9tLEevfyxQ8" id="userRegisterBtn" style="display: block; text-decoration: none;">
+                        <button type="button" class="user-register-btn next-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4h18v2H3V4zm0 15h14v2H3v-2zm0-5h18v2H3v-2zm0-5h14v2H3V9z" fill="currentColor"/></svg>
+                            User Creation Form
+                        </button>
+                    </a>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(2)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="button" class="next-btn" onclick="nextSection(2)">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 3: Event Selection -->
+                <section class="form-section" id="section3">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M17 2h3a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h3V0h2v2h6V0h2v2zm0 2v2h-2V4H9v2H7V4H5v16h14V4h-2zM7 8h10v2H7V8zm0 4h10v2H7v-2z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Event Selection</h2>
+                    <div class="section-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                                fill="currentColor" />
+                        </svg>
+                        <p>Remember: You can participate in a maximum of two events (either two technical or one
+                            technical and one non-technical)</p>
+                    </div>
+
+                    <div class="event-selection">
+                        <div class="event-category">
+                            <h3>Technical Events</h3>
+                            <div class="checkbox-group">
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="paperPresentation" name="events"
+                                        value="Paper Presentation">
+                                    <label for="paperPresentation">
+                                        <span class="event-icon">📝</span>
+                                        <span class="event-name">Paper Presentation</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="projectExpo" name="events" value="Project Expo">
+                                    <label for="projectExpo">
+                                        <span class="event-icon">🔬</span>
+                                        <span class="event-name">Project Expo</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="codeDebug" name="events" value="Debugging">
+                                    <label for="codeDebug">
+                                        <span class="event-icon">💻</span>
+                                        <span class="event-name">Code Debugging</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="technicalConnection" name="events"
+                                        value="Technical Connection">
+                                    <label for="technicalConnection">
+                                        <span class="event-icon">🧠</span>
+                                        <span class="event-name">Technical Connection</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="promptEngineering" name="events"
+                                        value="Prompt Engineering">
+                                    <label for="promptEngineering">
+                                        <span class="event-icon">🤖</span>
+                                        <span class="event-name">Prompt Engineering</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="event-category">
+                            <h3>Non-Technical Events</h3>
+                            <div class="checkbox-group">
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="memeCreation" name="events" value="Meme Creation">
+                                    <label for="memeCreation">
+                                        <span class="event-icon">😂</span>
+                                        <span class="event-name">Meme Creation</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="bioScope" name="events" value="Bioscope">
+                                    <label for="bioScope">
+                                        <span class="event-icon">🎬</span>
+                                        <span class="event-name">Bioscope (Movie connection)</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="videoEditing" name="events"
+                                        value="Video Editing & Photography">
+                                    <label for="videoEditing">
+                                        <span class="event-icon">🎥</span>
+                                        <span class="event-name">Video Editing & Photography</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="lyricDetective" name="events" value="Lyric Detective">
+                                    <label for="lyricDetective">
+                                        <span class="event-icon">🎶</span>
+                                        <span class="event-name">Lyric Detective</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-card">
+                                    <input type="checkbox" id="treasureHunt" name="events" value="Treasure Hunt">
+                                    <label for="treasureHunt">
+                                        <span class="event-icon">💰</span>
+                                        <span class="event-name">Treasure Hunt</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(3)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="button" class="next-btn" onclick="nextSection(3)">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 4: Event 1 Details -->
+                <section class="form-section" id="section4">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Event 1 Details</h2>
+                    <div id="eventDetails1" class="eventDetailsContent">
+                        <!-- This will be populated dynamically based on event selection -->
+                        <div class="placeholder-message">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                                    fill="currentColor" />
+                            </svg>
+                            <p>Please provide details about your team members if you selected Paper Presentation or
+                                Project Expo.</p>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(4)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="button" class="next-btn" onclick="nextSection(4)">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 5: Event 2 Details-->
+                <section class="form-section" id="section5">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Event 2 Details</h2>
+                    <div id="eventDetails2" class="eventDetailsContent">
+                        <!-- This will be populated dynamically based on event selection -->
+                        <div class="placeholder-message">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                                    fill="currentColor" />
+                            </svg>
+                            <p>Event 2 is not selected.</p>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(5)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="button" class="next-btn" onclick="nextSection(5)">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 6: Confirmation -->
+                <section class="form-section" id="section6">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-.997-4L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Confirmation</h2>
+
+                    <div class="confirmation-box">
+                        <div class="confirmation-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M20 22H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1zm-1-2V4H5v16h14zM8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"
+                                    fill="currentColor" />
+                            </svg>
+                            <h3>Registration Summary</h3>
+                        </div>
+                        <p>Please review your information before submitting:</p>
+                        <div id="summaryDetails" class="summary-details">
+                            <!-- Will be populated with form data -->
+                            <div class="summary-loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading summary...</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-confirm">
+                            <input type="checkbox" id="confirmInfo" name="confirmInfo" required>
+                            <label for="confirmInfo">I confirm that all the information provided is correct and I agree
+                                to follow the event rules.</label>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(6)">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="submit" class="submit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                    fill="currentColor" />
+                            </svg>
+                            Submit Registration
+                        </button>
+                    </div>
+                </section>
+            </form>
+        </div>
+
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+        <div class="decoration decoration-3"></div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>
