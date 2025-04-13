@@ -310,6 +310,10 @@ let confirmPage = (num) => ` <section class="form-section" id="section${num}">
                             </svg>
                             <h3>Registration Summary</h3>
                         </div>
+                        <div class="qr-container">
+                            <img src="img/qr-code.png" alt="qr" class="confirmation-image" width="80%" >
+                            <p><strong>Scan the QR code to make payment.</strong></p>
+                        </div>
                         <p>Please review your information before submitting:</p>
                         <div id="summaryDetails" class="summary-details">
                             <!-- Will be populated with form data -->

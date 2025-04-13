@@ -825,3 +825,12 @@ input[type="radio"] {
     background-color: var(--gray-light);
     color: var(--gray-dark);
 }
+
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    width: 100%;
+}
