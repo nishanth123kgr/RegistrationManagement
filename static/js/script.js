@@ -210,7 +210,7 @@ This event is all about connect the pictures and find out the tech term.</p>`,
 
 }
 
-const teamMates = [];
+let teamMates = [];
 
 function addTeamMember() {
     if (!validateTeamMateForm()) {
@@ -515,11 +515,10 @@ async function nextSection(sectionNum) {
 
 // Function to go back to previous section
 function prevSection(sectionNum) {
-    if(sectionNum === totalSections)
-    {
-        location.reload();
-        return;
-    }
+    // if (sectionNum === totalSections) {
+    //     location.reload();
+    //     return;
+    // }
     // Hide current section
     document.getElementById(`section${sectionNum}`).classList.remove('active');
 
@@ -541,14 +540,14 @@ function updateProgress() {
     document.getElementById('progressBar').style.width = `${progressPercentage}%`;
     document.getElementById('sectionIndicator').textContent = `Section ${currentSection} of ${totalSections}`;
 
-    if(document.querySelector('.teamMateForm')) {
+    if (document.querySelector('.teamMateForm')) {
         document.querySelector('.teamMateForm').remove();
         isAddTeamMateFormActive = false;
 
     }
 }
 
-function showUserCheckModal(title="Verifying Account", message="Checking if user already exists in our system...") {
+function showUserCheckModal(title = "Verifying Account", message = "Checking if user already exists in our system...") {
     // Create the modal elementSutherland
     const modal = document.createElement('div');
     modal.className = 'checking-modal';
@@ -713,9 +712,15 @@ async function checkEmailExists(input) {
             if (input.id === 'email') {
                 // Update main user fields
                 document.getElementById('fullName').value = data.userData.name;
+                document.getElementById('fullName').disabled = true;
                 document.getElementById('collegeName').value = data.userData.college;
+                document.getElementById('collegeName').disabled = true;
                 document.getElementById('phoneNumber').value = data.userData.phone;
+                document.getElementById('phoneNumber').disabled = true;
                 document.querySelector(`input[name="food"][value="${data.userData.food}"]`).checked = true;
+                document.querySelectorAll('input[name="food"]').forEach(input => input.disabled = true);
+
+
 
                 // Update userData object
                 userData = {
@@ -732,6 +737,9 @@ async function checkEmailExists(input) {
                 const userEvents = data.events || [];
                 const eventCheckboxes = document.querySelectorAll('input[name="events"]');
                 eventCheckboxes.forEach(checkbox => {
+
+                    checkbox.disabled = false;
+
                     if (userEvents.includes(checkbox.value)) {
                         checkbox.disabled = true;
                         checkbox.parentElement.classList.add('disabled-event'); // Optional: Add a visual indicator
@@ -749,9 +757,13 @@ async function checkEmailExists(input) {
 
                 // Update teammate fields
                 document.getElementById('teamMateFullName').value = data.userData.name;
+                document.getElementById('teamMateFullName').disabled = true;
                 document.getElementById('teamMateCollegeName').value = data.userData.college;
+                document.getElementById('teamMateCollegeName').disabled = true;
                 document.getElementById('teamMatePhoneNumber').value = data.userData.phone;
+                document.getElementById('teamMatePhoneNumber').disabled = true;
                 document.querySelector(`input[name="teamMateFood"][value="${data.userData.food}"]`).checked = true;
+                document.querySelectorAll('input[name="teamMateFood"]').forEach(input => input.disabled = true);
 
 
                 // Update teamMates array if the teammate already exists
@@ -780,26 +792,84 @@ async function checkEmailExists(input) {
                 }
             }
         }
+        else
+        {
+            // Reset fields if email doesn't exist
+            if (input.id === 'email') {
+                document.getElementById('fullName').value = '';
+                document.getElementById('collegeName').value = '';
+                document.getElementById('phoneNumber').value = '';
+                document.querySelectorAll('input[name="food"]').forEach(input => input.disabled = false);
+
+                document.querySelectorAll('input[name="events"]').forEach(input => {
+                    input.disabled = false;
+                    input.parentElement.classList.remove('disabled-event'); // Remove visual indicator
+                }
+                );
+
+                userData = {};
+
+
+                teamMates = [];
+
+
+                document.getElementById('fullName').disabled = false;
+                document.getElementById('collegeName').disabled = false;
+                document.getElementById('phoneNumber').disabled = false;
+
+                for(let sectionNum = 4; sectionNum <= totalSections; sectionNum++){
+                    document.getElementById(`section${sectionNum}`).remove();
+                }
+                totalSections = 3;
+                updateProgress();
+
+                
+            } else if (input.id === 'teamMateEmail') {
+                document.getElementById('teamMateFullName').value = '';
+                document.getElementById('teamMateCollegeName').value = '';
+                document.getElementById('teamMatePhoneNumber').value = '';
+                document.querySelectorAll('input[name="teamMateFood"]').forEach(input => input.disabled = false);
+
+                document.getElementById('teamMateFullName').disabled = false;
+                document.getElementById('teamMateCollegeName').disabled = false;
+                document.getElementById('teamMatePhoneNumber').disabled = false;
+            }
+        }
     }
 }
 
-document.getElementById('email').addEventListener('blur', function () {
-    checkEmailExists(this);
-});
-
+let emailInput = document.getElementById('email');
 let teamMateEmailInput = null;
 
+if (emailInput) {
+    emailInput.addEventListener('blur', function () {
+        checkEmailExists(this);
+    });
+}
+
 document.addEventListener('input', function (event) {
-    if (event.target && event.target.id === 'teamMateEmail' && event.target !== teamMateEmailInput) {
-        if (teamMateEmailInput) {
-            teamMateEmailInput.removeEventListener('blur', handleTeamMateEmailBlur);
+    if (event.target && (event.target.id === 'teamMateEmail' || event.target.id === 'email')) {
+        if (event.target.id === 'teamMateEmail' && event.target !== teamMateEmailInput) {
+            if (teamMateEmailInput) {
+                teamMateEmailInput.removeEventListener('blur', handleTeamMateEmailBlur);
+            }
+            teamMateEmailInput = event.target;
+            teamMateEmailInput.addEventListener('blur', handleTeamMateEmailBlur);
+        } else if (event.target.id === 'email' && event.target !== emailInput) {
+            if (emailInput) {
+                emailInput.removeEventListener('blur', handleEmailBlur);
+            }
+            emailInput = event.target;
+            emailInput.addEventListener('blur', handleEmailBlur);
         }
-        teamMateEmailInput = event.target;
-        teamMateEmailInput.addEventListener('blur', handleTeamMateEmailBlur);
     }
 });
 
 function handleTeamMateEmailBlur() {
+    checkEmailExists(this);
+}
+
+function handleEmailBlur() {
     checkEmailExists(this);
 }
 
@@ -960,19 +1030,19 @@ async function validateSection(sectionNum) {
         }
         for (let i = 0; i < teamMates.length; i++) {
             if (!teamMates[i].upiID || !teamMates[i].transactionID) {
-                let teamMateUpiID = document.getElementById(`upiID${i+1}`).value;
-                let teamMateTransactionID = document.getElementById(`transactionID${i+1}`).value;
+                let teamMateUpiID = document.getElementById(`upiID${i + 1}`).value;
+                let teamMateTransactionID = document.getElementById(`transactionID${i + 1}`).value;
 
                 const { upiID: isUPIValid, transactionID: isTxnValid } = validateUPIAndTransactionID(teamMateUpiID, teamMateTransactionID);
                 if (!isUPIValid) {
                     showToast('Please enter a valid UPI ID for team member.');
-                    document.getElementById(`upiID${i+1}`).focus();
+                    document.getElementById(`upiID${i + 1}`).focus();
                     return false;
                 }
 
                 if (!isTxnValid) {
                     showToast('Please enter a valid Transaction ID for team member.');
-                    document.getElementById(`transactionID${i+1}`).focus();
+                    document.getElementById(`transactionID${i + 1}`).focus();
                     return false;
                 }
                 teamMates[i]['upiID'] = teamMateUpiID;
@@ -1597,13 +1667,13 @@ async function doSubmit(e) {
 
     data.events = [];
 
-    for(const event of selectedEventsGlobal) {
+    for (const event of selectedEventsGlobal) {
         let eventData = {
             name: event.value,
             team: []
         };
         for (const mate of teamMates) {
-            if ((event.value ===  'Project Expo' || event.value ===  'Paper Presentation') && mate.events.includes(event.value)) {
+            if ((event.value === 'Project Expo' || event.value === 'Paper Presentation') && mate.events.includes(event.value)) {
                 eventData.team.push(mate.email);
             }
         }
@@ -1611,7 +1681,7 @@ async function doSubmit(e) {
             eventData.extraData = projectExpoData;
 
         }
-        if(event.value === 'Paper Presentation') {
+        if (event.value === 'Paper Presentation') {
             eventData.extraData = paperPresentationData;
         }
         data.events.push(eventData);
@@ -1623,14 +1693,14 @@ async function doSubmit(e) {
     }
 
     console.log(data);
-    
-        
 
-    const closeModal = showUserCheckModal(title="Registration in Progress", message="Please wait while we process your registration.");  
+
+
+    const closeModal = showUserCheckModal(title = "Registration in Progress", message = "Please wait while we process your registration.");
 
     let req = await fetch('/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
 
-    
+
 
     let res = await req.json();
 
