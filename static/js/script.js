@@ -201,8 +201,7 @@ This event is all about problem solving that is finding out error.`,
     <li><b>Round 2:</b> Craft the most concise and accurate AI-generated answers on a surprise topic.</li>
     <li><b>Round 3:</b> Create <b>Tamil lyrics</b> using AI and bring them to life with <b>SUNO AI</b> (lyrics will be judged, not the music).</li>
   </ul>
-
-  <p style="font-style: italic;">*Laptop is mandatory.</p>`,
+`,
 
 
     "Technical Connection": `<p>"Pixels to picture, picture to word. Connect the dots, and discover the tech term that's been hidden all along."
@@ -545,7 +544,7 @@ function updateProgress() {
     }
 }
 
-function showUserCheckModal() {
+function showUserCheckModal(title="Verifying Account", message="Checking if user already exists in our system...") {
     // Create the modal elementSutherland
     const modal = document.createElement('div');
     modal.className = 'checking-modal';
@@ -554,8 +553,8 @@ function showUserCheckModal() {
             <div class="spinner-container">
                 <div class="spinner"></div>
             </div>
-            <h2>Verifying Account</h2>
-            <p>Checking if user already exists in our system...</p>
+            <h2>${title}</h2>
+            <p>${message}</p>
         </div>
     `;
 
@@ -1623,10 +1622,15 @@ async function doSubmit(e) {
     
         
 
+    const closeModal = showUserCheckModal(title="Registration in Progress", message="Please wait while we process your registration.");  
 
     let req = await fetch('/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
 
+    
+
     let res = await req.json();
+
+    closeModal();
     if (!res.success) {
         console.log(res);
 
