@@ -1,7 +1,66 @@
 // Track current section and total sections
 let currentSection = 1;
 let currentSectionName = 'section1';
-const totalSections = 6; // We have 5 sections in our form
+let totalSections = 3; // We have 5 sections in our form
+
+let userData = {};
+
+let projectExpoData = {};
+let paperPresentationData = {};
+
+let selectedEventsGlobal;
+
+let isAddTeamMateFormActive = false;
+
+let teamMateForm = `
+                    <div class="teamMateForm">
+                        <div class="form-group floating-label">
+                            <input type="email" id="teamMateEmail" name="email" required placeholder="Team Mate Email">
+                            <label for="teamMateEmail">Team Mate Email Address <span class="required">*</span></label>
+                        </div>
+
+                        <div class="form-group floating-label">
+                            <input type="text" id="teamMateFullName" name="fullName" required placeholder=" ">
+                            <label for="teamMateFullName">Team Mate Full Name<span class="required">*</span></label>
+                        </div>
+
+                        <div class="form-group floating-label">
+                            <input type="text" id="teamMatePhoneNumber" name="phoneNumber" required placeholder=" ">
+                            <label for="teamMatePhoneNumber">Team Mate Phone Number<span class="required">*</span></label>
+                        </div>
+
+                        <div class="form-group floating-label">
+                            <input type="text" id="teamMateCollegeName" name="collegeName" required placeholder=" ">
+                            <label for="teamMateCollegeName">Team Mate College Name<span class="required">*</span></label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectType">Team Mate Food Preference <span class="required">*</span></label>
+                            <div class="radioGroup">
+                                <label>
+                                    <input type="radio" id="veg" name="teamMateFood" value="Veg" class="team-member-input" required>
+                                    Veg
+                                </label><br>
+                                <label>
+                                    <input type="radio" id="nonVeg" name="teamMateFood" value="Non-Veg" class="team-member-input" required>
+                                    Non-Veg
+                                </label>
+                            </div>
+                        </div>
+                    
+
+                        <button type="button" class="next-btn" onclick="addTeamMember()">
+                            Add
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                <path
+                                    d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    `
 
 const eventData = {
     "Lyric Detective": `<p>"A song’s meaning hides between the lines—only a true detective can find the clues."
@@ -152,6 +211,225 @@ This event is all about connect the pictures and find out the tech term.</p>`,
 
 }
 
+const teamMates = [];
+
+function addTeamMember() {
+    if (!validateTeamMateForm()) {
+        return;
+    }
+
+
+    const email = document.getElementById('teamMateEmail').value;
+
+    console.log(email, userData.email);
+
+
+    if (email === userData.email) {
+        showToast('You cannot add yourself as a team member.');
+        return;
+    }
+
+
+    const fullName = document.getElementById('teamMateFullName').value;
+    const collegeName = document.getElementById('teamMateCollegeName').value;
+    const phoneNumber = document.getElementById('teamMatePhoneNumber').value;
+
+    const foodPreference = document.querySelector('input[name="teamMateFood"]:checked').value;
+
+    let isAlreadyAdded = false;
+
+    const teamMemberSection = document.getElementById("section" + currentSection).querySelector('.team-member-section');
+
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
+
+    console.log(teamMates);
+
+
+
+    // Check if the email already exists in the teamMates array
+    for (const mate of teamMates) {
+        if (mate.email === email) {
+            // Email found, now check if already added for this event
+            if (mate.events.includes(currentSectionName)) {
+                showToast(`You have already added ${email} as a team member for ${currentSectionName}.`);
+                isAlreadyAdded = true;
+            } else {
+                addTeamMateCard(email);
+                mate.events.push(currentSectionName);
+                teamMemberSection.innerHTML = ``;
+                isAddTeamMateFormActive = false;
+            }
+            return; // Exit after handling the existing teammate
+        }
+    }
+
+    // If email not found in the array, add as new
+    addTeamMateCard(email);
+
+    teamMates.push({
+        email,
+        fullName,
+        collegeName,
+        phoneNumber,
+        foodPreference,
+        events: [currentSectionName]
+    });
+
+    console.log(teamMates);
+
+
+    teamMemberSection.innerHTML = ``;
+
+
+    isAddTeamMateFormActive = false;
+
+
+
+
+
+
+}
+
+let confirmPage = (num) => ` <section class="form-section" id="section${num}">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-.997-4L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Confirmation</h2>
+
+                    <div class="confirmation-box">
+                        <div class="confirmation-header">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M20 22H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1zm-1-2V4H5v16h14zM8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"
+                                    fill="currentColor" />
+                            </svg>
+                            <h3>Registration Summary</h3>
+                        </div>
+                        <p>Please review your information before submitting:</p>
+                        <div id="summaryDetails" class="summary-details">
+                            <!-- Will be populated with form data -->
+                            <div class="summary-loading">
+                                <div class="loading-spinner"></div>
+                                <p>Loading summary...</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group checkbox-confirm">
+                            <input type="checkbox" id="confirmInfo" name="confirmInfo" required>
+                            <label for="confirmInfo">I confirm that all the information provided is correct and I agree
+                                to follow the event rules.</label>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(${num})">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="submit" class="submit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path
+                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
+                                    fill="currentColor" />
+                            </svg>
+                            Submit Registration
+                        </button>
+                    </div>
+                </section>`
+
+function createSectionsForEvents() {
+
+    let selectedEvents = document.querySelectorAll('input[name="events"]:checked');
+
+    selectedEventsGlobal = selectedEvents;
+
+
+    let sectionNum = 4, eventNum = 1;
+
+    for (const event of selectedEvents) {
+
+        let sectionTemplate = `<section class="form-section" id="section${sectionNum}" data-eventName="${event.value}">
+                    <div class="section-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z" />
+                            <path
+                                d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"
+                                fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h2>Event ${eventNum} Details</h2>
+                    <div id="eventDetails${eventNum}" class="eventDetailsContent">
+                        <!-- This will be populated dynamically based on event selection -->
+                        <h2>${event.value}</h2>
+                        <div class="event-details">
+                        ${eventData[event.value]}
+                        </div>
+                        
+                        
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="back-btn" onclick="prevSection(${sectionNum})">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                            Back
+                        </button>
+                        <button type="button" class="next-btn" onclick="nextSection(${sectionNum})">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"
+                                    fill="currentColor" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>`;
+
+        if (!document.getElementById('section' + sectionNum)) {
+            document.getElementById('registrationForm').innerHTML += sectionTemplate;
+
+        }
+
+        sectionNum++;
+        eventNum++;
+
+
+
+    }
+
+    let submitBtn = document.querySelector('.submit-btn');
+
+
+    if (!submitBtn) {
+        document.getElementById('registrationForm').innerHTML += confirmPage(sectionNum);
+        submitBtn = document.querySelector('.submit-btn');
+        submitBtn.addEventListener('click', doSubmit);
+    }
+
+
+    totalSections = sectionNum;
+
+
+
+
+
+}
+
+
 // Function to navigate to next section
 async function nextSection(sectionNum) {
     // Validate current section before proceeding
@@ -166,29 +444,63 @@ async function nextSection(sectionNum) {
 
     // Show next section
     currentSection = sectionNum + 1;
+    if (currentSection === 4) {
+        createSectionsForEvents();
+
+
+
+        // currentSectionName = selectedEvents[0].value;
+        // updateEventDetailsSection(1);
+    }
     document.getElementById(`section${currentSection}`).classList.add('active');
 
     // Update progress bar
     updateProgress();
-    const selectedEvents = document.querySelectorAll('input[name="events"]:checked');
 
-    if (currentSection === 4) {
 
-        currentSectionName = selectedEvents[0].value;
-        updateEventDetailsSection(1);
+    if (currentSectionName === "Project Expo") {
+        const projectTitle = document.getElementById('projectTitle')?.value || 'N/A';
+        const projectDescription = document.getElementById('projectDescription')?.value || 'N/A';
+        const projectType = document.querySelector('input[name="projectType"]:checked')?.value || 'N/A';
+
+        projectExpoData = {
+            projectTitle: projectTitle,
+            projectDescription: projectDescription,
+            projectType: projectType
+        }
     }
+
+    if (currentSectionName === "Paper Presentation") {
+        const abstract = document.getElementById('abstract');
+        paperPresentationData = {
+            abstract: abstract.value
+        }
+    }
+
+
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
+
+    const target = document.getElementById('section' + currentSection)?.querySelector('.eventDetailsContent');
+    if (target && target.querySelectorAll('.event-team-details').length === 0) {
+        target.innerHTML += handleTeamData();
+    }
+
+
 
     // If moving to team details section, update its content based on event selection
-    if (currentSection === 5) {
-        currentSectionName = selectedEvents[1].value;
-        if (selectedEvents.length > 1) {
-            updateEventDetailsSection(2);
-        }
+    // if (currentSection === 5) {
+    //     currentSectionName = selectedEvents[1].value;
+    //     if (selectedEvents.length > 1) {
+    //         updateEventDetailsSection(2);
+    //     }
 
-    }
+    // }
+
+
+
 
     // If moving to confirmation section, populate summary
-    if (currentSection === 6) {
+    if (currentSection === totalSections && totalSections != 3) {
         populateSummary();
     }
 
@@ -200,12 +512,18 @@ async function nextSection(sectionNum) {
 
 // Function to go back to previous section
 function prevSection(sectionNum) {
+    if(sectionNum === totalSections)
+    {
+        location.reload();
+        return;
+    }
     // Hide current section
     document.getElementById(`section${sectionNum}`).classList.remove('active');
 
     // Show previous section
     currentSection = sectionNum - 1;
     document.getElementById(`section${currentSection}`).classList.add('active');
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
 
     // Update progress bar
     updateProgress();
@@ -219,10 +537,16 @@ function updateProgress() {
     const progressPercentage = (currentSection / totalSections) * 100;
     document.getElementById('progressBar').style.width = `${progressPercentage}%`;
     document.getElementById('sectionIndicator').textContent = `Section ${currentSection} of ${totalSections}`;
+
+    if(document.querySelector('.teamMateForm')) {
+        document.querySelector('.teamMateForm').remove();
+        isAddTeamMateFormActive = false;
+
+    }
 }
 
 function showUserCheckModal() {
-    // Create the modal element
+    // Create the modal elementSutherland
     const modal = document.createElement('div');
     modal.className = 'checking-modal';
     modal.innerHTML = `
@@ -338,18 +662,12 @@ async function isUserExists(email) {
     const data = await req.json();
     closeModal();
 
-    return data.exists;
+    return { exists: data.exists, userData: data.userData };
 }
 
-// Validate section before proceeding
-async function validateSection(sectionNum) {
-    // Section 1 is just information, no validation needed
-    if (sectionNum === 1) return true;
-
-    // Validate Basic Information section
-    if (sectionNum === 2) {
-        const field = ['email'];
-
+function validateTeamMateForm() {
+    const requiredFields = ['teamMateEmail', 'teamMateFullName', 'teamMateCollegeName', 'teamMatePhoneNumber'];
+    for (const field of requiredFields) {
         const input = document.getElementById(field);
         if (!input.value.trim()) {
             showToast(`Please fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
@@ -358,20 +676,186 @@ async function validateSection(sectionNum) {
         }
 
         // Validate email format
-        if (field === 'email' && !validateEmail(input.value)) {
+        if (field === 'teamMateEmail' && !validateEmail(input.value)) {
             showToast('Please enter a valid email address.');
             input.focus();
             return false;
         }
 
-        // Check User Exists
-
-
-
-        if (!(await isUserExists(input.value))) {
-            showToast('User does not exist. Please register in the <a href="https://forms.gle/RetUchxwvY8uNbG4A">user registration form</a>.');
+        // Validate phone number
+        if (field === 'teamMatePhoneNumber' && !validatePhone(input.value)) {
+            showToast('Please enter a valid 10-digit phone number.');
+            input.focus();
             return false;
         }
+    }
+    return true;
+}
+
+async function checkEmailExists(input) {
+    const email = input.value;
+    if (email) {
+        const closeModal = showUserCheckModal();
+        const req = await fetch('/api/user/get', {
+            body: JSON.stringify({ email }), method: 'POST', headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await req.json();
+        console.log(data);
+
+        closeModal();
+        if (data.exists) {
+            // Determine if the input belongs to the main user or a teammate
+            if (input.id === 'email') {
+                // Update main user fields
+                document.getElementById('fullName').value = data.userData.name;
+                document.getElementById('collegeName').value = data.userData.college;
+                document.getElementById('phoneNumber').value = data.userData.phone;
+                document.querySelector(`input[name="food"][value="${data.userData.food}"]`).checked = true;
+
+                // Update userData object
+                userData = {
+                    email: data.userData.email,
+                    fullName: data.userData.name,
+                    collegeName: data.userData.college,
+                    phoneNumber: data.userData.phone,
+                    foodPreference: data.userData.food,
+                    upiID: data.userData.upiID,
+                    transactionID: data.userData.transactionID
+                };
+
+                // Disable team events this user is already part of
+                const userEvents = data.events || [];
+                const eventCheckboxes = document.querySelectorAll('input[name="events"]');
+                eventCheckboxes.forEach(checkbox => {
+                    if (userEvents.includes(checkbox.value)) {
+                        checkbox.disabled = true;
+                        checkbox.parentElement.classList.add('disabled-event'); // Optional: Add a visual indicator
+                    }
+                });
+            } else if (input.id === 'teamMateEmail') {
+                // validate if user already registered for the event
+                const userEvents = data.events || [];
+                if (userEvents.includes(currentSectionName)) {
+                    showToast(`This user is already registered for ${currentSectionName}.`);
+                    input.value = '';
+                    return;
+                }
+
+
+                // Update teammate fields
+                document.getElementById('teamMateFullName').value = data.userData.name;
+                document.getElementById('teamMateCollegeName').value = data.userData.college;
+                document.getElementById('teamMatePhoneNumber').value = data.userData.phone;
+                document.querySelector(`input[name="teamMateFood"][value="${data.userData.food}"]`).checked = true;
+
+
+                // Update teamMates array if the teammate already exists
+                const existingMate = teamMates.find(mate => mate.email === email);
+                if (existingMate) {
+                    existingMate.fullName = data.userData.name;
+                    existingMate.collegeName = data.userData.college;
+                    existingMate.phoneNumber = data.userData.phone;
+                    existingMate.foodPreference = data.userData.food;
+                    existingMate.upiID = data.userData.upiID;
+                    existingMate.transactionID = data.userData.transactionID;
+
+                }
+                else {
+                    // Add new teammate to the teamMates array
+                    teamMates.push({
+                        email: data.userData.email,
+                        fullName: data.userData.name,
+                        collegeName: data.userData.college,
+                        phoneNumber: data.userData.phone,
+                        foodPreference: data.userData.food,
+                        upiID: data.userData.upiID,
+                        transactionID: data.userData.transactionID,
+                        events: []
+                    });
+                }
+            }
+        }
+    }
+}
+
+document.getElementById('email').addEventListener('blur', function () {
+    checkEmailExists(this);
+});
+
+let teamMateEmailInput = null;
+
+document.addEventListener('input', function (event) {
+    if (event.target && event.target.id === 'teamMateEmail' && event.target !== teamMateEmailInput) {
+        if (teamMateEmailInput) {
+            teamMateEmailInput.removeEventListener('blur', handleTeamMateEmailBlur);
+        }
+        teamMateEmailInput = event.target;
+        teamMateEmailInput.addEventListener('blur', handleTeamMateEmailBlur);
+    }
+});
+
+function handleTeamMateEmailBlur() {
+    checkEmailExists(this);
+}
+
+
+// Validate section before proceeding
+async function validateSection(sectionNum) {
+    // Section 1 is just information, no validation needed
+    if (sectionNum === 1) return true;
+
+    // Validate Basic Information section
+    if (sectionNum === 2) {
+
+        const requiredFields = ['email', 'fullName', 'collegeName', 'phoneNumber'];
+        for (const field of requiredFields) {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                showToast(`SutherlandPlease fill in the ${field.replace(/([A-Z])/g, ' $1').toLowerCase()} field.`);
+                input.focus();
+                return false;
+            }
+
+            // Validate email format
+            if (field === 'email' && !validateEmail(input.value)) {
+                showToast('Please enter a valid email address.');
+                input.focus();
+                return false;
+            }
+
+            // Validate phone number
+            if (field === 'phoneNumber' && !validatePhone(input.value)) {
+                showToast('Please enter a valid 10-digit phone number.');
+                input.focus();
+                return false;
+            }
+        }
+
+        // Validate Food preference it is an radio
+        const foodPreference = document.querySelector('input[name="food"]:checked');
+        if (!foodPreference) {
+            showToast('Please select a food preference.');
+            return false;
+        }
+
+        if (Object.keys(userData).length === 0) {
+            userData = {
+                email: document.getElementById('email').value,
+                fullName: document.getElementById('fullName').value,
+                collegeName: document.getElementById('collegeName').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                foodPreference: document.querySelector('input[name="food"]:checked').value
+            }
+        }
+
+
+
+        // Check User Exists
+        // if (await isUserExists(userData.email)) {
+
+        // }
 
         return true;
     }
@@ -384,10 +868,10 @@ async function validateSection(sectionNum) {
             return false;
         }
 
-        if (selectedEvents.length > 2) {
-            showToast('You can only participate in a maximum of two events.');
-            return false;
-        }
+        // if (selectedEvents.length > 4) {
+        //     showToast('You can only participate in a maximum of two events.');
+        //     return false;
+        // }
 
 
         // const { techCount, nonTechCount } = getEventSelectedCount(selectedEvents);
@@ -400,79 +884,136 @@ async function validateSection(sectionNum) {
         return true;
     }
 
+
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
+
     // Validate Team Details section
-    if (sectionNum === 5 || sectionNum === 4) {
-        // Check if Paper Presentation or Project Expo is selected
-        const paperPresentation = document.getElementById('paperPresentation').checked;
-        const projectExpo = document.getElementById('projectExpo').checked;
+    const projectExpo = currentSectionName === "Project Expo";
+    const paperPresentation = currentSectionName === "Paper Presentation";
 
-        if (paperPresentation || projectExpo) {
-            const teamMemberInputs = document.getElementById(`section${sectionNum}`).querySelectorAll('.team-member-input');
 
-            for (const input of teamMemberInputs) {
-                if (input.required && !input.value.trim()) {
-                    showToast('Please fill in all required details.');
-                    input.focus();
-                    return false;
-                }
-                if (input.type === 'email' && input.value.trim()) {
-                    if (!validateEmail(input.value)) {
-                        showToast('Please enter a valid email address.');
-                        input.focus();
-                        return false;
-                    }
-                    else {
-                        if (!(await isUserExists(input.value))) {
-                            showToast('User does not exist. Please register in the <a href="https://forms.gle/RetUchxwvY8uNbG4A">user registration form</a>.');
-                            input.focus();
-                            return false;
-                        }
-                    }
-                }
+
+    if (paperPresentation || projectExpo) {
+        const teamMemberInputs = document.getElementById(`section${sectionNum}`).querySelectorAll('.team-member-input');
+
+        for (const input of teamMemberInputs) {
+            if (input.required && !input.value.trim()) {
+                showToast('Please fill in all required details.');
+                input.focus();
+                return false;
             }
+        }
+    }
 
-            // Check if abstract is provided for Paper Presentation
-            if (paperPresentation && currentSectionName === "Paper Presentation") {
-                const abstract = document.getElementById('abstract');
-                if (abstract && !abstract.value.trim()) {
-                    showToast('Please provide an abstract for Paper Presentation.');
-                    abstract.focus();
-                    return false;
-                }
+
+    // Check if abstract is provided for Paper Presentation
+    if (paperPresentation) {
+        const abstract = document.getElementById('abstract');
+        if (abstract && !abstract.value.trim()) {
+            showToast('Please provide an abstract for Paper Presentation.');
+            abstract.focus();
+            return false;
+        }
+    }
+
+    if (projectExpo) {
+        const radioGroup = document.querySelectorAll('input[name="projectType"]');
+        let selected = false;
+        for (const radio of radioGroup) {
+            if (radio.checked) {
+                selected = true;
+                break;
             }
+        }
+        if (!selected) {
+            showToast('Please select a project type for Project Expo.');
+            return false;
+        }
+    }
 
-            if (projectExpo && currentSectionName === "Project Expo") {
-                const radioGroup = document.querySelectorAll('input[name="projectType"]');
-                let selected = false;
-                for (const radio of radioGroup) {
-                    if (radio.checked) {
-                        selected = true;
-                        break;
-                    }
-                }
-                if (!selected) {
-                    showToast('Please select a project type for Project Expo.');
+
+    // Validate Confirmation section
+    if (sectionNum === totalSections) {
+
+        const upiIDInput = document.getElementById('upiID');
+        const transactionIDInput = document.getElementById('transactionID');
+
+        if (upiIDInput && transactionIDInput) {
+            const upiID = document.getElementById('upiID').value;
+            const transactionID = document.getElementById('transactionID').value;
+            const { upiID: isUPIValid, transactionID: isTxnValid } = validateUPIAndTransactionID(upiID, transactionID);
+            if (!isUPIValid) {
+                showToast('Please enter a valid UPI ID.');
+                document.getElementById('upiID').focus();
+                return false;
+            }
+            if (!isTxnValid) {
+                showToast('Please enter a valid Transaction ID.');
+                document.getElementById('transactionID').focus();
+                return false;
+            }
+            userData['upiID'] = upiID;
+            userData['transactionID'] = transactionID;
+        }
+        for (let i = 0; i < teamMates.length; i++) {
+            if (!teamMates[i].upiID || !teamMates[i].transactionID) {
+                let teamMateUpiID = document.getElementById(`upiID${i+1}`).value;
+                let teamMateTransactionID = document.getElementById(`transactionID${i+1}`).value;
+
+                const { upiID: isUPIValid, transactionID: isTxnValid } = validateUPIAndTransactionID(teamMateUpiID, teamMateTransactionID);
+                if (!isUPIValid) {
+                    showToast('Please enter a valid UPI ID for team member.');
+                    document.getElementById(`upiID${i+1}`).focus();
                     return false;
                 }
+
+                if (!isTxnValid) {
+                    showToast('Please enter a valid Transaction ID for team member.');
+                    document.getElementById(`transactionID${i+1}`).focus();
+                    return false;
+                }
+                teamMates[i]['upiID'] = teamMateUpiID;
+                teamMates[i]['transactionID'] = teamMateTransactionID;
             }
         }
 
-        return true;
-    }
 
-    // Validate Confirmation section
-    if (sectionNum === 6) {
+
+
+
         const confirmCheckbox = document.getElementById('confirmInfo');
         if (!confirmCheckbox.checked) {
             showToast('Please confirm that all information is correct before submitting.');
             confirmCheckbox.focus();
             return false;
         }
+
+
+
+
+
         return true;
     }
 
     return true;
 }
+
+function validateUPIAndTransactionID(upiID, transactionID) {
+    // UPI ID regex: alphanumeric (with . or _) + @bankname
+    const upiRegex = /^[\w.\-]{2,256}@[a-zA-Z]{2,64}$/;
+
+    // Transaction ID regex: exactly 12 digits
+    const txnRegex = /^\d{12}$/;
+
+    const isUPIValid = upiRegex.test(upiID);
+    const isTxnValid = txnRegex.test(transactionID);
+
+    return {
+        upiID: isUPIValid,
+        transactionID: isTxnValid
+    };
+}
+
 
 function getEventSelectedCount(selectedEvents) {
     let techCount = 0;
@@ -512,20 +1053,67 @@ function updateEventDetailsSection(eventNum) {
     const eventOneDetails = document.getElementById('eventDetails' + eventNum);
     const selectedEvent = document.querySelectorAll('input[name="events"]:checked');
     const eventName = selectedEvent ? selectedEvent[eventNum - 1].value : '';
+
+    eventOneDetails.parentElement.setAttribute("data-eventName", eventName);
+
     const eventDescription = eventData[eventName] || '';
     eventOneDetails.innerHTML = `
         <h2>${eventName}</h2>
-        <div class="event-team-details">
+        <div class="event-details">
         ${eventDescription}
         </div>
         ${handleTeamData(eventName)}
     `;
 }
 
-function handleTeamData(event) {
+function addSuggestion(element) {
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
+    const email = element.querySelector('.member-email').textContent;
+    for (let mate of teamMates) {
+        if (mate.email === email) {
+            if (!mate.events.includes(currentSectionName)) {
+                const teamMatesCountForEvent = teamMates.filter(mate => mate.events.includes(currentSectionName)).length;
+                if (teamMatesCountForEvent >= 2) {
+                    showToast('You have already added the maximum number of team members for this event.');
+                    return;
+                }
+                mate.events.push(currentSectionName);
+                addTeamMateCard(email);
+            }
+            else {
+                showToast(`${email} is already added for this event.`);
+            }
+        }
+    }
+}
+
+
+function handleTeamData() {
     let html = '';
 
-    if (event === "Paper Presentation") {
+    let teamMateSuggestions = '';
+
+    console.log(teamMates);
+
+
+    for (const mate of teamMates) {
+        if (!mate.events.includes(currentSectionName)) {
+            teamMateSuggestions += `
+                                <button class="member-card member-card-suggestion" onclick="addSuggestion(this)">
+                                    <span class="member-email">${mate.email}</span>
+                                    <div class="member-close-btn" ">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#333333" version="1.1" id="Capa_1" width="10px" height="10px" viewBox="0 0 45.402 45.402" xml:space="preserve">
+                                            <g>
+                                                <path d="M41.267,18.557H26.832V4.134C26.832,1.851,24.99,0,22.707,0c-2.283,0-4.124,1.851-4.124,4.135v14.432H4.141   c-2.283,0-4.139,1.851-4.138,4.135c-0.001,1.141,0.46,2.187,1.207,2.934c0.748,0.749,1.78,1.222,2.92,1.222h14.453V41.27   c0,1.142,0.453,2.176,1.201,2.922c0.748,0.748,1.777,1.211,2.919,1.211c2.282,0,4.129-1.851,4.129-4.133V26.857h14.435   c2.283,0,4.134-1.867,4.133-4.15C45.399,20.425,43.548,18.557,41.267,18.557z"/>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </button>
+            `;
+        }
+    }
+
+    if (currentSectionName === "Paper Presentation") {
         html += `
             <div class="event-team-details">
                 <div class="form-group">
@@ -536,20 +1124,29 @@ function handleTeamData(event) {
                 <h4>Additional Team Members</h4>
                 <p>You are already registered as the first member.</p>
                 
-                <div class="form-group floating-label">
-                    <input type="email" id="member2Email" name="member2Email" class="team-member-input" placeholder=" ">
-                    <label for="member2Email">Member 2 Email</label>
+                <div class="team-mates-list">
+
+                    <div class="team-mate-card-suggestions">
+                    ${teamMateSuggestions}
+                    </div>
+                    
                 </div>
-                
-                <div class="form-group floating-label">
-                    <input type="email" id="member3Email" name="member3Email" class="team-member-input" placeholder=" ">
-                    <label for="member3Email">Member 3 Email</label>
+
+                <button type="button" class="next-btn" onclick="addTeamMemberForm()" style="margin-bottom: 1rem;">
+                            Add Team Member
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" fill="currentColor"></path>
+                        </svg>
+                        </button>
+
+                <div class="team-member-section">
                 </div>
             </div>
         `;
     }
 
-    if (event === "Project Expo") {
+    if (currentSectionName === "Project Expo") {
         html += `
             <div class="event-team-details">
                 
@@ -585,10 +1182,24 @@ function handleTeamData(event) {
                 
                 <h4>Additional Team Member</h4>
                 <p>You are already registered as the first member.</p>
-                
-                <div class="form-group floating-label">
-                    <input type="email" id="projectMember2Email" name="projectMember2Email" class="team-member-input" placeholder=" ">
-                    <label for="projectMember2Email">Member 2 Email</label>
+
+                <div class="team-mates-list">
+
+                    <div class="team-mate-card-suggestions">
+                        ${teamMateSuggestions}
+                    </div>
+                    
+                </div>
+
+                <button type="button" class="next-btn" onclick="addTeamMemberForm()" style="margin-bottom: 1rem;">
+                            Add Team Member
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path d="M12 11a5 5 0 0 1 5 5v6h-2v-6a3 3 0 0 0-2.824-2.995L12 13a3 3 0 0 0-2.995 2.824L9 16v6H7v-6a5 5 0 0 1 5-5zm-6.5 3c.279 0 .55.033.81.094a5.947 5.947 0 0 0-.301 1.575L6 16v.086a1.492 1.492 0 0 0-.356-.08L5.5 16a1.5 1.5 0 0 0-1.493 1.356L4 17.5V22H2v-4.5A3.5 3.5 0 0 1 5.5 14zm13 0a3.5 3.5 0 0 1 3.5 3.5V22h-2v-4.5a1.5 1.5 0 0 0-1.356-1.493L18.5 16c-.175 0-.343.03-.5.085V16c0-.666-.108-1.306-.309-1.904.259-.063.53-.096.809-.096zm-13-6a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm13 0a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm-13 2a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zm13 0a.5.5 0 1 0 0 1 .5.5 0 0 0 0-1zM12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" fill="currentColor"></path>
+                        </svg>
+                        </button>
+
+                <div class="team-member-section">
                 </div>
             </div>
         `;
@@ -596,6 +1207,63 @@ function handleTeamData(event) {
 
     return html;
 }
+
+
+function addTeamMateCard(email) {
+    const teamMatesList = document.getElementById('section' + currentSection).querySelector('.team-mates-list');
+    teamMatesList.innerHTML += `<div class="member-card" id="emailCard">
+                                    <span class="member-email">${email}</span>
+                                    <button class="member-close-btn" onclick="removeCard(this.parentElement)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="#ffffff"/>
+                                        </svg>
+                                    </button>
+                                </div>`;
+
+}
+
+
+
+
+
+function removeCard(element) {
+    currentSectionName = document.querySelector('.active').getAttribute('data-eventName');
+    for (const mate of teamMates) {
+        if (mate.email === element.querySelector('.member-email').innerText) {
+            const index = mate.events.indexOf(currentSectionName);
+            if (index > -1) {
+                mate.events.splice(index, 1);
+            }
+            if (mate.events.length === 0) {
+                const mateIndex = teamMates.indexOf(mate);
+                if (mateIndex > -1) {
+                    teamMates.splice(mateIndex, 1);
+                }
+            }
+        }
+    }
+    console.log(teamMates);
+
+    element.remove();
+}
+
+
+function addTeamMemberForm() {
+    if (!isAddTeamMateFormActive) {
+        currentSectionName = document.querySelector('.active').getAttribute('data-eventName')
+        const teamMatesCountForEvent = teamMates.filter(mate => mate.events.includes(currentSectionName)).length;
+        if (teamMatesCountForEvent >= 2) {
+            showToast('You have already added the maximum number of team members for this event.');
+            return;
+        }
+        const teamMemberSection = document.getElementById("section" + currentSection).querySelector('.team-member-section');
+        teamMemberSection.innerHTML += teamMateForm;
+        isAddTeamMateFormActive = true;
+
+    }
+
+}
+
 
 
 
@@ -706,50 +1374,124 @@ function updateTeamDetailsSection() {
 // Populate summary in confirmation section
 function populateSummary() {
     const summaryDetails = document.getElementById('summaryDetails');
-    const email = document.getElementById('email').value;
+    const email = userData.email;
+    const name = userData.fullName;
+    const food = userData.foodPreference;
+    const mobile = userData.phoneNumber;
 
 
     // Get selected events
-    const selectedEvents = Array.from(document.querySelectorAll('input[name="events"]:checked'))
+    const selectedEvents = Array.from(selectedEventsGlobal)
         .map(event => event.value);
 
     let summaryHTML = `
         <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Food Preference:</strong> ${food}</p>
+        <p><strong>Mobile:</strong> ${mobile}</p>
+    `;
+
+    console.log(userData);
+    console.log(teamMates);
+
+
+    if (!userData.upiID || !userData.transactionID) {
+        summaryHTML += `
+            <div class="form-group floating-label">
+                <input type="text" id="transactionID" name="transactionID" required placeholder=" ">
+                <label for="transactionID">Transaction ID<span class="required">*</span></label>
+            </div>
+
+            <div class="form-group floating-label">
+                <input type="text" id="upiID" name="upiID" required placeholder=" ">
+                <label for="upiID">UPI ID<span class="required">*</span></label>
+            </div>
+        `;
+    }
+
+    summaryHTML += `
         <p><strong>Selected Events:</strong> ${selectedEvents.join(', ')}</p>
     `;
 
-    // Add team details if applicable
-    const paperPresentation = document.getElementById('paperPresentation').checked;
-    const projectExpo = document.getElementById('projectExpo').checked;
 
-    if (paperPresentation) {
-        const member2Email = document.getElementById('member2Email')?.value || 'None';
-        const member3Email = document.getElementById('member3Email')?.value || 'None';
+    if (selectedEvents.includes("Paper Presentation")) {
+        let members = [];
+
+        for (const mate of teamMates) {
+            if (mate.events.includes("Paper Presentation")) {
+                members.push(mate.email);
+            }
+        }
 
         summaryHTML += `
             <p><strong>Paper Presentation Team:</strong></p>
             <ul>
-                <li>Team Members Mail: ${email} (you), ${member2Email}, ${member3Email}</li>
+                <li>Team Members Mail: ${email} (you), ${members.join(', ')}</li>
                 <li>Abstract: Submitted</li>
             </ul>
         `;
     }
 
-    if (projectExpo) {
-        const projectTitle = document.getElementById('projectTitle')?.value || 'N/A';
-        const projectMember2Email = document.getElementById('projectMember2Email')?.value || 'None';
-        const projectDescription = document.getElementById('projectDescription')?.value || 'N/A';
-        const projectType = document.querySelector('input[name="projectType"]:checked')?.value || 'N/A';
+    if (selectedEvents.includes("Project Expo")) {
+
+        let members = [];
+
+        for (const mate of teamMates) {
+            if (mate.events.includes("Project Expo")) {
+                members.push(mate.email);
+            }
+        }
 
         summaryHTML += `
             <p><strong>Project Expo Team:</strong></p>
             <ul>
-                <li>Project Title: ${projectTitle}</li>
-                <li>Project Description: ${projectDescription}</li>
-                <li>Project Type: ${projectType}</li>
-                <li>Team Members Mail: ${email} (you), ${projectMember2Email}</li>
+                <li>Project Title: ${projectExpoData.projectTitle}</li>
+                <li>Project Description: ${projectExpoData.projectDescription}</li>
+                <li>Project Type: ${projectExpoData.projectType}</li>
+                <li>Team Members Mail: ${email} (you), ${members.join(', ')}</li>
                 <li>Demo Submission: Required by 13-04-2025</li>
             </ul>
+        `;
+    }
+
+    if (teamMates.length > 0) {
+        let teamMemberDetails = '';
+        for (let i = 0; i < teamMates.length; i++) {
+
+            const mate = teamMates[i];
+            const email = mate.email;
+            const name = mate.fullName;
+            const food = mate.foodPreference;
+            const mobile = mate.phoneNumber;
+
+            teamMemberDetails += `
+            <p><strong>Member ${i + 1}:</strong></p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Food Preference:</strong> ${food}</p>
+            <p><strong>Mobile:</strong> ${mobile}</p>
+            `;
+
+            if (!mate.upiID || !mate.transactionID) {
+                teamMemberDetails += `
+                <div class="form-group floating-label">
+                    <input type="text" id="transactionID${i + 1}" name="transactionID${i + 1}" required placeholder=" ">
+                    <label for="transactionID${i + 1}">Member ${i + 1} Transaction ID<span class="required">*</span></label>
+                </div>
+
+                <div class="form-group floating-label">
+                    <input type="text" id="upiID${i + 1}" name="upiID${i + 1}" required placeholder=" ">
+                    <label for="upiID${i + 1}">Member ${i + 1} UPI ID<span class="required">*</span></label>
+                </div>
+                `;
+            }
+
+
+        }
+
+        summaryHTML += `
+        <p><strong>Team Members Details:</strong></p>
+        ${teamMemberDetails}
         `;
     }
 
@@ -835,75 +1577,52 @@ function showToast(message) {
     }, 3500);
 }
 
+
+
 // Form submission
-document.getElementById('registrationForm').addEventListener('submit', async function (e) {
+async function doSubmit(e) {
     e.preventDefault();
 
-    if (!validateSection(5)) {
+    if (!(await validateSection(totalSections))) {
         return;
     }
 
     // Gather form data
     const data = {};
 
-    const email = document.getElementById('email').value;
+    data.lead = userData;
 
-
-    // Get selected events
-    const selectedEvents = Array.from(document.querySelectorAll('input[name="events"]:checked'))
-        .map(event => event.value);
-
-    data.email = email;
     data.events = [];
-    for (let i = 0; i < selectedEvents.length; i++) {
-        let eventData = {};
-        eventData.name = selectedEvents[i];
-        eventData.members = [];
-        eventData.members.push(email);
 
-        if (selectedEvents[i] === "Paper Presentation") {
-            abstract = document.getElementById('abstract').value;
-
-
-            member2Email = document.getElementById('member2Email').value;
-            member3Email = document.getElementById('member3Email').value;
-
-            if (member2Email) {
-                eventData.members.push(member2Email);
+    for(const event of selectedEventsGlobal) {
+        let eventData = {
+            name: event.value,
+            team: []
+        };
+        for (const mate of teamMates) {
+            if ((event.value ===  'Project Expo' || event.value ===  'Paper Presentation') && mate.events.includes(event.value)) {
+                eventData.team.push(mate.email);
             }
-            if (member3Email) {
-                eventData.members.push(member3Email);
-            }
-
-            eventData.extraData = {
-                abstract: abstract,
-            };
-
+        }
+        if (event.value === 'Project Expo') {
+            eventData.extraData = projectExpoData;
 
         }
-        else if (selectedEvents[i] === "Project Expo") {
-            projectTitle = document.getElementById('projectTitle').value;
-            projectDescription = document.getElementById('projectDescription').value;
-            projectType = document.querySelector('input[name="projectType"]:checked').value;
-            projectMember2Email = document.getElementById('projectMember2Email').value;
-
-            if (projectMember2Email) {
-                eventData.members.push(projectMember2Email);
-            }
-
-            eventData.extraData = {
-                projectTitle: projectTitle,
-                projectDescription: projectDescription,
-                projectType: projectType,
-            };
-
+        if(event.value === 'Paper Presentation') {
+            eventData.extraData = paperPresentationData;
         }
-
-
         data.events.push(eventData);
     }
 
+    data.teamMates = {};
+    for (const mate of teamMates) {
+        data.teamMates[mate.email] = mate;
+    }
+
     console.log(data);
+    
+        
+
 
     let req = await fetch('/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } })
 
@@ -1026,18 +1745,10 @@ document.getElementById('registrationForm').addEventListener('submit', async fun
         // Close modal on button click
         modal.querySelector('.modal-close-btn').addEventListener('click', function () {
             modal.remove();
-
-            // Reset form and go back to first section
-            document.getElementById(`section${currentSection}`).classList.remove('active');
-            currentSection = 1;
-            document.getElementById(`section${currentSection}`).classList.add('active');
-            updateProgress();
-
-            // Reset the form
-            document.getElementById('registrationForm').reset();
+            location.reload();
         });
     }
-});
+}
 
 // Initialize event listeners for checkbox validation
 document.querySelectorAll('input[name="events"]').forEach(checkbox => {
@@ -1052,10 +1763,11 @@ document.querySelectorAll('input[name="events"]').forEach(checkbox => {
         //     this.checked = false;
         // }
 
-        if (selectedEvents.length > 2) {
-            // showToast('You can only select a maximum of two events.');
-            this.checked = false;
-        }
+        // if (selectedEvents.length > 4) {
+        //     // showToast('You can only select a maximum of two events.');
+
+        //     this.checked = false;
+        // }
     });
 });
 

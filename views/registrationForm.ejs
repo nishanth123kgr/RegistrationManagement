@@ -14,7 +14,7 @@
 <body>
     <div class="page-container">
         <div class="container">
-            <form id="registrationForm">
+            <div id="registrationForm">
                 <div class="form-header">
                     <div class="logo-container">
 
@@ -57,11 +57,6 @@
                                 <li>
                                     <span class="rule-icon">📌</span>
                                     <span class="rule-text">Participants are mandated to register in the <a href="https://forms.gle/UoJx7P9tLEevfyxQ8" > User Creation Form</a> before proceeding in this form.</span>
-                                </li>
-                                <li>
-                                    <span class="rule-icon">🎯</span>
-                                    <span class="rule-text">Participants can only attend two events, either two
-                                        technical or one technical and one non-technical event.</span>
                                 </li>
                                 <li>
                                     <span class="rule-icon">🍽️</span>
@@ -122,12 +117,40 @@
                         <label for="email">Email Address <span class="required">*</span></label>
                     </div>
 
-                    <a href="https://forms.gle/UoJx7P9tLEevfyxQ8" id="userRegisterBtn" style="display: block; text-decoration: none;">
+                    <div class="form-group floating-label">
+                        <input type="text" id="fullName" name="fullName" required placeholder=" ">
+                        <label for="fullName">Full Name<span class="required">*</span></label>
+                    </div>
+
+                    <div class="form-group floating-label">
+                        <input type="text" id="phoneNumber" name="phoneNumber" required placeholder=" ">
+                        <label for="phoneNumber">Phone Number<span class="required">*</span></label>
+                    </div>
+
+                    <div class="form-group floating-label">
+                        <input type="text" id="collegeName" name="collegeName" required placeholder=" ">
+                        <label for="collegeName">College Name<span class="required">*</span></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectType">Food Preference <span class="required">*</span></label>
+                        <div class="radioGroup">
+                            <label>
+                                <input type="radio" id="veg" name="food" value="Veg" class="team-member-input" required>
+                                Veg
+                            </label><br>
+                            <label>
+                                <input type="radio" id="nonVeg" name="food" value="Non-Veg" class="team-member-input" required>
+                                Non-Veg
+                            </label>
+                        </div>
+                    </div>
+                    <!-- <a href="https://forms.gle/UoJx7P9tLEevfyxQ8" id="userRegisterBtn" style="display: block; text-decoration: none;">
                         <button type="button" class="user-register-btn next-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M3 4h18v2H3V4zm0 15h14v2H3v-2zm0-5h18v2H3v-2zm0-5h14v2H3V9z" fill="currentColor"/></svg>
                             User Creation Form
                         </button>
-                    </a>
+                    </a> -->
 
                     <div class="button-container">
                         <button type="button" class="back-btn" onclick="prevSection(2)">
@@ -160,16 +183,14 @@
                         </svg>
                     </div>
                     <h2>Event Selection</h2>
-                    <div class="section-info">
+                    <!-- <div class="section-info">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
                             <path fill="none" d="M0 0h24v24H0z" />
                             <path
                                 d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
                                 fill="currentColor" />
                         </svg>
-                        <p>Remember: You can participate in a maximum of two events (either two technical or one
-                            technical and one non-technical)</p>
-                    </div>
+                    </div> -->
 
                     <div class="event-selection">
                         <div class="event-category">
@@ -280,6 +301,7 @@
                 </section>
 
                 <!-- Section 4: Event 1 Details -->
+                 <!--
                 <section class="form-section" id="section4">
                     <div class="section-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -291,7 +313,6 @@
                     </div>
                     <h2>Event 1 Details</h2>
                     <div id="eventDetails1" class="eventDetailsContent">
-                        <!-- This will be populated dynamically based on event selection -->
                         <div class="placeholder-message">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
                                 <path fill="none" d="M0 0h24v24H0z" />
@@ -324,7 +345,10 @@
                     </div>
                 </section>
 
+            -->
+
                 <!-- Section 5: Event 2 Details-->
+                 <!--
                 <section class="form-section" id="section5">
                     <div class="section-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
@@ -336,7 +360,6 @@
                     </div>
                     <h2>Event 2 Details</h2>
                     <div id="eventDetails2" class="eventDetailsContent">
-                        <!-- This will be populated dynamically based on event selection -->
                         <div class="placeholder-message">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="48" height="48">
                                 <path fill="none" d="M0 0h24v24H0z" />
@@ -368,65 +391,11 @@
                     </div>
                 </section>
 
+            -->
+
                 <!-- Section 6: Confirmation -->
-                <section class="form-section" id="section6">
-                    <div class="section-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path
-                                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zm-.997-4L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"
-                                fill="currentColor" />
-                        </svg>
-                    </div>
-                    <h2>Confirmation</h2>
-
-                    <div class="confirmation-box">
-                        <div class="confirmation-header">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path
-                                    d="M20 22H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1zm-1-2V4H5v16h14zM8 7h8v2H8V7zm0 4h8v2H8v-2zm0 4h8v2H8v-2z"
-                                    fill="currentColor" />
-                            </svg>
-                            <h3>Registration Summary</h3>
-                        </div>
-                        <p>Please review your information before submitting:</p>
-                        <div id="summaryDetails" class="summary-details">
-                            <!-- Will be populated with form data -->
-                            <div class="summary-loading">
-                                <div class="loading-spinner"></div>
-                                <p>Loading summary...</p>
-                            </div>
-                        </div>
-
-                        <div class="form-group checkbox-confirm">
-                            <input type="checkbox" id="confirmInfo" name="confirmInfo" required>
-                            <label for="confirmInfo">I confirm that all the information provided is correct and I agree
-                                to follow the event rules.</label>
-                        </div>
-                    </div>
-
-                    <div class="button-container">
-                        <button type="button" class="back-btn" onclick="prevSection(6)">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"
-                                    fill="currentColor" />
-                            </svg>
-                            Back
-                        </button>
-                        <button type="submit" class="submit-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path
-                                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"
-                                    fill="currentColor" />
-                            </svg>
-                            Submit Registration
-                        </button>
-                    </div>
-                </section>
-            </form>
+               
+            </div>
         </div>
 
         <div class="decoration decoration-1"></div>

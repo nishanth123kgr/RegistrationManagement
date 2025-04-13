@@ -109,7 +109,7 @@ body {
 }
 
 /* Form styles */
-form {
+#registrationForm {
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-lg);
@@ -358,6 +358,7 @@ form {
 }
 
 .floating-label label {
+    border-radius: 3px;
     position: absolute;
     top: 50%;
     left: 1rem;
@@ -709,11 +710,11 @@ button {
     .rule-text {
         font-size: 0.9rem;
     }
-    
+
 }
 
 @media (max-width: 600px) {
-    
+
     .container {
         padding: 0 0.5rem;
     }
@@ -746,29 +747,81 @@ button {
     }
 }
 
-.eventDetailsContent{
+.eventDetailsContent {
     list-style-position: inside;
 }
 
-.eventDetailsContent li{
+.eventDetailsContent li {
     margin-left: 1em;
     padding-left: 0em;
     color: var(--gray);
 }
 
-.eventDetailsContent li:last-child{
+.eventDetailsContent li:last-child {
     margin-bottom: 10px;
 }
 
-.team-member-input input[type="radio"] {
+input[type="radio"] {
     margin-right: 5px;
-    accent-color: var(--primary); /* Optional: adds a blue tint to the radio buttons */
+    margin-left: 1rem;
+    accent-color: var(--primary);
 }
 
-.radioGroup{
+.radioGroup {
     margin: 0.5rem 0 1rem;
 }
 
-.radioGroup label{
-    margin-bottom: 1rem;
+.radioGroup label {
+    margin-bottom: 2rem;
+}
+
+
+.member-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: fit-content;
+    gap: 16px;
+    color: white;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    box-shadow: var(--shadow);
+    flex-wrap: wrap;
+}
+
+.member-card-suggestion{
+    color: #333!important;
+    background: white;
+    border: 1px solid var(--gray-light);
+
+}
+
+.member-email {
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.member-close-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+
+.member-close-btn:hover {
+    color: #e00;
+}
+
+.disabled-event {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+    background-color: var(--gray-light);
+    color: var(--gray-dark);
 }

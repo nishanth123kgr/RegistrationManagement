@@ -5,12 +5,12 @@ const logger = require('../utils/logger');
 
 router.get('/', userController.getAllUsers);
 
-router.post('/exists', async (req, res) => {
+router.post('/get', async (req, res) => {
     logger.info(req.body);
     logger.info("Checking if user exists with email: " + req.body.email);
     const email = req.body.email;
-    const exists = await userController.isUserExistsWithEmail(email);
-    res.json({ exists });
+    const data = await userController.getUserDetailsAndEvents(email);
+    res.json(data);
 });
 
 
