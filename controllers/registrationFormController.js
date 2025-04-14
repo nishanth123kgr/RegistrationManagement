@@ -2,6 +2,8 @@ const supabase = require('@supabase/supabase-js')
 const logger = require('../utils/logger')
 const userController = require('./userController');
 
+const mailer = require('../utils/mailer');
+
 exports.showRegisterForm = (req, res) => {
     res.render('registrationForm');
 }
@@ -286,4 +288,12 @@ exports.handleRegistrationFormSubmission = async (req, res) => {
         message: 'Form submitted successfully',
         success: true,
     });
+
+    // Send confirmation email
+
+    mailer.sendMail(lead.email);
+
+    for (let memberEmail in teamMates) {
+        mailer.sendMail(memberEmail);
+    }
 }
