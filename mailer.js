@@ -4,10 +4,10 @@ const path = require('path');
 
 // Create a transporter using SMTP (example with Gmail)
 const transporter = nodemailer.createTransport({
-  service:'yahoo',
+  service:'gmail',
   auth: {
-    user: 'sharonjoseph52@yahoo.com',
-    pass: 'plptcdrrugjbybpf' // Use App Passwords if using Yahoo
+    user: 'josephsharon051@gmail.com ',
+    pass: 'yfuqhifiujcbdbxp' // Use App Passwords if using Yahoo
   }
 });
 
@@ -17,7 +17,7 @@ const htmlContent = fs.readFileSync(path.join(__dirname, 'mail.html'), 'utf-8');
 // Define the email options
 const mailOptions = {
   from: 'techblitz@bluecape.site',
-  to: 'josephsharon051@gmail.com',
+  to: 'shanthiaustin74@gmail.com',
   subject: 'TechBlitz 2025 - Registration Confirmation',
   html: htmlContent,
 };
