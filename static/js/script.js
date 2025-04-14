@@ -357,6 +357,8 @@ function createSectionsForEvents() {
 
     selectedEventsGlobal = selectedEvents;
 
+    resetSections();
+
 
     let sectionNum = 4, eventNum = 1;
 
@@ -511,6 +513,17 @@ async function nextSection(sectionNum) {
     window.scrollTo(0, document.querySelector('.form-header').offsetTop);
 
     return true;
+}
+
+function resetSections() {
+    for(let sectionNum = 4; sectionNum <= totalSections; sectionNum++){
+        let section = document.getElementById(`section${sectionNum}`);
+        if (section) {
+            section.remove();
+        }
+    }
+    totalSections = 3;
+    updateProgress();
 }
 
 // Function to go back to previous section
@@ -817,11 +830,7 @@ async function checkEmailExists(input) {
                 document.getElementById('collegeName').disabled = false;
                 document.getElementById('phoneNumber').disabled = false;
 
-                for(let sectionNum = 4; sectionNum <= totalSections; sectionNum++){
-                    document.getElementById(`section${sectionNum}`).remove();
-                }
-                totalSections = 3;
-                updateProgress();
+                resetSections();
 
                 
             } else if (input.id === 'teamMateEmail') {
