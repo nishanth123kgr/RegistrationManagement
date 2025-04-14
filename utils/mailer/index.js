@@ -251,11 +251,11 @@ exports.sendMail = async function (email) {
 
     // Create a transporter using SMTP (example with Gmail)
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'noreply@auttvl.ac.in',
-            pass: 'ydcznicxgwjraeni' // Use App Passwords if using Gmail
-        }
+          service:'yahoo',
+          auth: {
+            user: 'techblitz@bluecape.site',
+            pass: 'plptcdrrugjbybpf' // Use App Passwords if using Yahoo
+          }
     });
 
     // Read HTML content from 'mail.html'
