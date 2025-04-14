@@ -16,7 +16,7 @@ const htmlContent = fs.readFileSync(path.join(__dirname, 'mail.html'), 'utf-8');
 
 // Define the email options
 const mailOptions = {
-  from: 'techblitz@bluecape.site',
+  from: '"Team TechBlitz" techblitz@bluecape.site',
   to: 'shanthiaustin74@gmail.com',
   subject: 'TechBlitz 2025 - Registration Confirmation',
   html: htmlContent,
