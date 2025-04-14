@@ -4,10 +4,10 @@ const path = require('path');
 
 // Create a transporter using SMTP (example with Gmail)
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service:'yahoo',
   auth: {
     user: 'techblitz@bluecape.site',
-    pass: 'tvcm prbl vtno sydo' // Use App Passwords if using Gmail
+    pass: 'plptcdrrugjbybpf' // Use App Passwords if using Yahoo
   }
 });
 
