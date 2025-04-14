@@ -6,7 +6,7 @@ const path = require('path');
 const transporter = nodemailer.createTransport({
   service:'yahoo',
   auth: {
-    user: 'techblitz@bluecape.site',
+    user: 'sharonjoseph52@yahoo.com',
     pass: 'plptcdrrugjbybpf' // Use App Passwords if using Yahoo
   }
 });
