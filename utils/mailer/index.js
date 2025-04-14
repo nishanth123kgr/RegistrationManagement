@@ -251,10 +251,10 @@ exports.sendMail = async function (email) {
 
     // Create a transporter using SMTP (example with Gmail)
     const transporter = nodemailer.createTransport({
-          service:'yahoo',
+          service:'gmail',
           auth: {
-            user: 'techblitz@bluecape.site',
-            pass: 'plptcdrrugjbybpf' // Use App Passwords if using Yahoo
+            user: 'josephsharon051@gmail.com ',
+            pass: 'yfuqhifiujcbdbxp' // Use App Passwords if using Yahoo
           }
     });
 
@@ -304,7 +304,7 @@ exports.sendMail = async function (email) {
 
     // Define the email options
     const mailOptions = {
-        from: 'noreply@auttvl.ac.in',
+        from: '"Team TechBlitz" techblitz@bluecape.site',
         to: email,
         subject: 'TechBlitz 2025 - Registration Confirmation',
         html: mailHTML(data.userData, qrURL, data.events),
