@@ -340,4 +340,4 @@ exports.sendMailToAllUsers = async function () {
     }
 };
 
-exports.sendMail("nishanth123kgr@gmail.com")
+// exports.sendMail("nishanth123kgr@gmail.com")
