@@ -367,4 +367,4 @@ exports.sendMailToAllUsers = async function () {
     }
 };
 
-exports.sendMailToAllUsers()
+// exports.sendMailToAllUsers()
