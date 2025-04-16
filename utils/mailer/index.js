@@ -6,6 +6,9 @@ const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 const logger = require('../logger');
 
+const QRCode = require('qrcode');
+
+
 require('dotenv').config();
 
 const icon = {
@@ -96,7 +99,7 @@ const mailHTML = (userData, qrURL, events) => {
                                 <tr>
                                     <td align="center" style="padding: 30px 20px; background-color: #f9fafb; border-radius: 12px; border: 1px solid #e2e8f0; margin: 30px 0;">
                                         <div style="width: 200px; margin: 0 auto 20px;  background-color: white; border-radius: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);">
-                                            <img src="https:${qrURL}" alt="Registration QR Code" style="width: 100%; height: auto; display: block; border-radius: 20px;">
+                                            <img src="${qrURL}" alt="Registration QR Code" style="width: 100%; height: auto; display: block; border-radius: 20px;">
                                         </div>
                                         <p style="font-weight: 600; color: #4f46e5; margin-bottom: 5px; font-size: 18px;">Please show this QR code at the Registration Desk</p>
                                     </td>
@@ -258,57 +261,26 @@ exports.sendMail = async function (email) {
         return;
     }
     
-
-
-
-
-
-
-    
-
-    // Read HTML content from 'mail.html'
-    // const htmlContent = fs.readFileSync(path.join(__dirname, 'mail.html'), 'utf-8');
-
-    // Create a post request with body
-    const qrAPI = 'https://api.qrcode-monkey.com/qr/custom';
-
     const userID = Buffer.from(data.userData.id.toString()).toString('base64');
 
-    const qrData = {
-        "data": userID,
-        "config": {
-            "body": "circle",
-            "eye": "frame13",
-            "eyeBall": "ball15",
-            "erf1": [],
-            "erf2": [],
-            "erf3": [],
-            "brf1": [],
-            "brf2": [],
-            "brf3": [],
-            "bodyColor": "#000000",
-            "bgColor": "#FFFFFF",
-            "eye1Color": "#000000",
-            "eye2Color": "#000000",
-            "eye3Color": "#000000",
-            "eyeBall1Color": "6366f1",
-            "eyeBall2Color": "6366f1",
-            "eyeBall3Color": "6366f1",
-            "gradientColor1": null,
-            "gradientColor2": null,
-            "gradientType": "linear",
-            "gradientOnEyes": false,
-            "logo": "",
-            "logoMode": "clean"
-        },
-        "size": 300,
-        "download": "imageUrl",
-        "file": "png"
+    const qrPath = path.join(__dirname, '../../static/qrcodes', `${userID}.png`);
+    // const qrURL = `//techblitz.bluecape.site/qrcodes/${userID}.png`;
+    const qrURL = `https://techblitz.bluecape.site/qrcodes/${userID}.png`;
+
+    try {
+        await QRCode.toFile(qrPath, userID, {
+            color: {
+                dark: '#000000',
+                light: '#FFFFFF',
+            },
+            width: 300,
+        });
+        console.log('QR code generated and saved at:', qrPath);
+    } catch (err) {
+        console.error('Error generating QR code:', err);
+        return;
     }
 
-
-    const response = await axios.post(qrAPI, qrData);
-    const qrURL = response.data.imageUrl;
 
     if(!qrURL) {
         console.error('Error generating QR code:', response.data);
@@ -357,6 +329,7 @@ exports.sendMailToAllUsers = async function () {
         const totalUsers = allUsers.length;
         for (const user of allUsers) {
             await exports.sendMail(user.email);
+            await
             sentEmails++;
             console.log(`Sent email to ${user.email}. (${sentEmails}/${totalUsers})`);
         }
@@ -367,4 +340,4 @@ exports.sendMailToAllUsers = async function () {
     }
 };
 
-// exports.sendMailToAllUsers()
+exports.sendMail("nishanth123kgr@gmail.com")

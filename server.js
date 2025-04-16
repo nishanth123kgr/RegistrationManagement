@@ -28,7 +28,7 @@ const registrationFormRouter = require('./routes/registrationFormRouter');
 
 app.use('/api/user', userRoutes);
 app.use('/api/payment', paymentRoute);
-app.use('/register', registrationFormRouter);
+// app.use('/register', registrationFormRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
