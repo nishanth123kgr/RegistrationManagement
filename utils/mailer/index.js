@@ -3,6 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const userController = require('../../controllers/userController');
 const axios = require('axios');
+const { createClient } = require('@supabase/supabase-js');
+const logger = require('../logger');
+
+require('dotenv').config();
 
 const icon = {
     "Technical Connection": "🧠",
@@ -16,6 +20,15 @@ const icon = {
     "Video Editing & Photography": "🎥",
     "Lyric Detective": "🎶"
 };
+
+// Create a transporter using SMTP (example with Gmail)
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'noreply@auttvl.ac.in',
+        pass: 'ydcznicxgwjraeni' // Use App Passwords if using Gmail
+    }
+});
 
 
 const mailHTML = (userData, qrURL, events) => {
@@ -238,6 +251,8 @@ exports.sendMail = async function (email) {
 
     const data = await userController.getUserDetailsAndEvents(email);
 
+    console.log(data);
+
     if(!data.exists) {
         console.error('User data does not exist for email:', email);
         return;
@@ -249,14 +264,7 @@ exports.sendMail = async function (email) {
 
 
 
-    // Create a transporter using SMTP (example with Gmail)
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'noreply@auttvl.ac.in',
-            pass: 'ydcznicxgwjraeni' // Use App Passwords if using Gmail
-        }
-    });
+    
 
     // Read HTML content from 'mail.html'
     // const htmlContent = fs.readFileSync(path.join(__dirname, 'mail.html'), 'utf-8');
@@ -302,9 +310,14 @@ exports.sendMail = async function (email) {
     const response = await axios.post(qrAPI, qrData);
     const qrURL = response.data.imageUrl;
 
+    if(!qrURL) {
+        console.error('Error generating QR code:', response.data);
+        return;
+    }
+
     // Define the email options
     const mailOptions = {
-        from: 'noreply@auttvl.ac.in',
+        from: 'Team TechBlitz <noreply@auttvl.ac.in>',
         to: email,
         subject: 'TechBlitz 2025 - Registration Confirmation',
         html: mailHTML(data.userData, qrURL, data.events),
@@ -321,3 +334,37 @@ exports.sendMail = async function (email) {
 
 }
 
+exports.sendMailToAllUsers = async function () {
+    try {
+        const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_PUBLIC_ANON_KEY);
+
+        const { data: allUsers, error } = await supabase
+            .from('users')
+            .select('email')
+            .gt('id', 135);
+
+        if (error) {
+            throw new Error('Error fetching users from Supabase: ' + error.message);
+        }
+
+        logger.info('Fetched all users from Supabase:', allUsers);
+        if (!allUsers || allUsers.length === 0) {
+            console.log('No users found in the database.');
+            return;
+        }
+
+        let sentEmails = 0;
+        const totalUsers = allUsers.length;
+        for (const user of allUsers) {
+            await exports.sendMail(user.email);
+            sentEmails++;
+            console.log(`Sent email to ${user.email}. (${sentEmails}/${totalUsers})`);
+        }
+
+        console.log('Emails sent to all users successfully.');
+    } catch (error) {
+        console.error('Error sending emails to all users:', error);
+    }
+};
+
+exports.sendMailToAllUsers()
