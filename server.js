@@ -8,7 +8,12 @@ const cors = require('cors');
 
 corsOptions = {
     origin: process.env.NODE_ENV === 'production' ? 
-        ['https://registration-management-mnkyyztg3-nishanth123kgrs-projects.vercel.app'] : 
+        [
+            'https://registration-management-mnkyyztg3-nishanth123kgrs-projects.vercel.app',
+            'https://register.bluu.in',
+            'https://bluu.in',
+            'https://www.bluu.in'
+        ] : 
         ['http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
