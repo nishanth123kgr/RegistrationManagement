@@ -2,18 +2,25 @@
 const { createLogger, format, transports } = require('winston');
 const path = require('path');
 
+// Configure logger based on environment
+const loggerTransports = [new transports.Console()];
+
+// Only add file transport in development
+if (process.env.NODE_ENV !== 'production') {
+  loggerTransports.push(
+    new transports.File({ filename: path.join(__dirname, 'logs', 'app.log') })
+  );
+}
+
 const logger = createLogger({
-  level: 'info', // log levels: error, warn, info, http, verbose, debug, silly
+  level: process.env.NODE_ENV === 'production' ? 'error' : 'info',
   format: format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     format.printf(({ timestamp, level, message }) => {
       return `${timestamp} [${level.toUpperCase()}] ${message}`;
     })
   ),
-  transports: [
-    new transports.Console(),
-    new transports.File({ filename: path.join(__dirname, 'logs', 'app.log') })
-  ]
+  transports: loggerTransports
 });
 
 module.exports = logger;

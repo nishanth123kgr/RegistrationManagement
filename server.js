@@ -7,9 +7,12 @@ require('dotenv').config();
 const cors = require('cors');
 
 corsOptions = {
-    origin: '*',
+    origin: process.env.NODE_ENV === 'production' ? 
+        ['https://your-domain.vercel.app'] : // Replace with your actual Vercel domain
+        ['http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }
 
 app.use(cors(corsOptions));
