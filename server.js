@@ -8,7 +8,7 @@ const cors = require('cors');
 
 corsOptions = {
     origin: process.env.NODE_ENV === 'production' ? 
-        ['https://your-domain.vercel.app'] : // Replace with your actual Vercel domain
+        ['https://registration-management-mnkyyztg3-nishanth123kgrs-projects.vercel.app'] : 
         ['http://localhost:3000', 'http://localhost:3001'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization'],
